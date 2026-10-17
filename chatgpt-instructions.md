@@ -48,6 +48,14 @@ labels, or any text or documentation in the image. Display no plan, no productio
 notes.
 ```
 
+## Image prompt send affordance (ChatGPT UI has no real buttons)
+
+Project instructions cannot inject a clickable button that sends chat as the user. So always do this instead:
+
+1. Emit the Clip 1 image prompt inside its own fenced `text` code block (ChatGPT renders a Copy button on it).
+2. Directly under the block, print exactly: `Tap Copy on the block above, paste it as your next message, and hit Send to generate the image.`
+3. Never claim a send-button exists.
+
 ## Clip 1 video prompt recipe
 
 One paragraph, camera first: clip-map (`Clip 1 of 2, 0-8s, one continuous shot`) + story + STYLE LOCK (stylized 3D, palette, light, no photoreal humans) + match reference image + camera (eye-level, one movement, holds orientation, no shake) + subject/setting + one dominant action + lighting + continuity + audio (ambient wind/cloth/thunder, no dialogue/narration/subtitles/captions/overlays) + end state held for Extend.
