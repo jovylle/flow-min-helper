@@ -52,13 +52,11 @@ labels, or any text or documentation in the image. Display no plan, no productio
 notes.
 ```
 
-## Generate image flow (no real buttons in plain chat)
+## Generate image flow (Intelligent UI button first)
 
-Plain Project chat cannot render a real clickable button — the code block's Copy button is the affordance. So:
+Render the Clip 1 image prompt as an Intelligent UI card with a tappable `Generate image` button. Tapping it sends the scene-only prompt and starts in-chat image generation — call the image tool with the prompt verbatim and present the result as the Clip 1 reference.
 
-1. Emit the Clip 1 image prompt inside its own fenced `text` code block.
-2. Directly under the block, print exactly: `Generate image: tap Copy on the block above, paste it as your next message, and hit Send — I'll generate it.`
-3. When the user sends that prompt back, call the image tool with it verbatim (scene-only prompt) and present the result as the Clip 1 reference. Never claim a clickable send-button exists.
+Fallback (client without Intelligent UI): emit the prompt in its own fenced `text` code block, then print exactly: `Generate image: tap Copy on the block above, paste it as your next message, and hit Send — I'll generate it.`
 
 ## Clip 1 video prompt recipe
 
