@@ -5,7 +5,7 @@ import random
 import re
 import sys
 
-__version__ = "0.3.0"
+__version__ = "0.5.0"
 MODEL = "veo-3.1-lite"
 DUR = "8s"
 TRAILER = ("One single frame of one composed scene \u2014 a single shot. No storyboard, no panels,\n"
@@ -91,7 +91,7 @@ def clip2_extend_delta():
         "Audio: same ambient storm tone continues, no speech.")
 
 
-def build(idea="", clips=None, fresh=False):
+def build(idea="", clips=None, extend=False):
     idea = clean(idea) or random.choice(STORIES)
     if clips is None:
         clips = random.randint(1, 3)
@@ -104,12 +104,12 @@ def build(idea="", clips=None, fresh=False):
            "--- CLIP 1 VIDEO (8s, Veo 3.1 Lite, ingredient: Clip 1 image) ---",
            clip_video(idea, 1, clips)]
     for k in range(2, clips + 1):
-        if fresh:
-            out += ["", f"--- CLIP {k} VIDEO (8s, Veo 3.1 Lite, ingredient: Clip 1 image) ---",
-                    clip_video(idea, k, clips)]
-        else:
+        if extend:
             out += ["", f"--- CLIP {k} EXTEND (8s, Veo 3.1 Lite Extend, no image) ---",
                     clip2_extend_delta()]
+        else:
+            out += ["", f"--- CLIP {k} VIDEO (8s, Veo 3.1 Lite, ingredient: Clip 1 image) ---",
+                    clip_video(idea, k, clips)]
     return "\n".join(out)
 
 
@@ -142,15 +142,17 @@ def self_test():
     five = build("storm keeper", clips=5)
     assert five.count("--- CLIP ") == 1 + 1 + 4, five.count("--- CLIP ")
     assert "clips: 5" in five
-    fresh = build("storm keeper", clips=3, fresh=True)
-    assert fresh.count("ingredient: Clip 1 image") == 3
-    assert "EXTEND" not in fresh
+    ingr = build("storm keeper", clips=3)
+    assert ingr.count("ingredient: Clip 1 image") == 3
+    assert "EXTEND" not in ingr
+    ext = build("storm keeper", clips=3, extend=True)
+    assert ext.count("EXTEND (") == 2 and "ingredient: Clip 1 image" not in ext.split("CLIP 2 EXTEND")[1]
     try:
         build("storm keeper", clips=6)
         raise AssertionError("clips=6 must fail")
     except ValueError:
         pass
-    print("self-test: OK (image trailer, 1-move, ambient-only, extend 40-70w, status 2-line, 1-5 clips, fresh ingredient)")
+    print("self-test: OK (image trailer, 1-move, ambient-only, extend 40-70w, status 2-line, 1-5 clips, ingredient default, extend opt-in)")
 
 
 def main(argv=None):
@@ -159,7 +161,7 @@ def main(argv=None):
     p.add_argument("--version", action="version", version=__version__)
     p.add_argument("--clips", type=int, default=None, help="number of 8s clips, 1-5 (default: random 1-3)")
     p.add_argument("--single", action="store_true", help="only Clip 1 (same as --clips 1)")
-    p.add_argument("--fresh", action="store_true", help="clips 2+ are fresh ingredient clips instead of Extend")
+    p.add_argument("--extend", action="store_true", help="clips 2+ use Extend instead of the Clip 1 image as ingredient")
     p.add_argument("--self-test", action="store_true", help="run built-in checks")
     a = p.parse_args(argv)
     if a.self_test:
@@ -167,7 +169,7 @@ def main(argv=None):
         return 0
     idea = a.idea or clean(sys.stdin.read())
     try:
-        print(build(idea, clips=1 if a.single else a.clips, fresh=a.fresh))
+        print(build(idea, clips=1 if a.single else a.clips, extend=a.extend))
     except ValueError as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
