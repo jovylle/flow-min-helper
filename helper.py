@@ -5,7 +5,7 @@ import random
 import re
 import sys
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 MODEL = "veo-3.1-lite"
 DUR = "8s"
 TRAILER = ("One single frame of one composed scene \u2014 a single shot. No storyboard, no panels,\n"
@@ -100,7 +100,7 @@ def clip2_extend_delta():
         "Keep the same ambient sound continuing, with no speech, narration, subtitles, or text overlays.")
 
 
-def build(idea="", clips=None, extend=False, master=""):
+def build(idea="", clips=None, extend=False, master="", summary=""):
     idea = clean(idea) or random.choice(STORIES)
     if clips is None:
         clips = random.randint(1, 3)
@@ -108,6 +108,8 @@ def build(idea="", clips=None, extend=False, master=""):
         raise ValueError("clips must be 1-5")
     s1, s2 = status_block(clips)
     out = [s1, s2, "",
+           "--- STORY SUMMARY ---",
+           clean(summary) or idea, "",
            "--- CLIP 1 IMAGE (generate in-chat) ---",
            image_prompt(idea, master), "",
            "--- CLIP 1 VIDEO (8s, Veo 3.1 Lite, ingredient: Clip 1 image) ---",
@@ -153,6 +155,9 @@ def self_test():
     for bad in ["thunder", "lightning", "night", "storm", "knee", "flow"]:
         assert bad not in farm.lower(), bad
     assert "generate in-chat" in farm
+    assert farm.index("--- STORY SUMMARY ---") < farm.index("--- CLIP 1 IMAGE"), "summary before image"
+    sm = build("storm keeper", clips=2, summary="A keeper guards a courtyard. The storm arrives.")
+    assert "A keeper guards a courtyard. The storm arrives." in sm.split("--- CLIP 1 IMAGE")[0]
     five = build("storm keeper", clips=5)
     assert five.count("--- CLIP ") == 1 + 1 + 4, five.count("--- CLIP ")
     assert "clips: 5" in five
@@ -180,6 +185,7 @@ def main(argv=None):
     p.add_argument("--single", action="store_true", help="only Clip 1 (same as --clips 1)")
     p.add_argument("--extend", action="store_true", help="clips 2+ use Extend instead of the Clip 1 image as ingredient")
     p.add_argument("--master", default="", help="character, setting, palette details reused verbatim in every prompt")
+    p.add_argument("--summary", default="", help="2-3 sentence story summary shown above the prompts (default: the idea)")
     p.add_argument("--self-test", action="store_true", help="run built-in checks")
     a = p.parse_args(argv)
     if a.self_test:
@@ -187,7 +193,7 @@ def main(argv=None):
         return 0
     idea = a.idea or clean(sys.stdin.read())
     try:
-        print(build(idea, clips=1 if a.single else a.clips, extend=a.extend, master=a.master))
+        print(build(idea, clips=1 if a.single else a.clips, extend=a.extend, master=a.master, summary=a.summary))
     except ValueError as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
