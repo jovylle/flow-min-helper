@@ -10,6 +10,7 @@ python3 helper.py                       # no idea: random story, random 1-3 clip
 python3 helper.py "idea..." --single   # Clip 1 only (save credits)
 python3 helper.py "idea..." --clips 5   # 1-5 clips, Clip 1 image as ingredient on every clip
 python3 helper.py "idea..." --clips 3 --extend  # clips 2+ as Extend instead
+python3 helper.py "idea..." --master "hooded keeper, grey coat"  # same character details in every prompt
 python3 helper.py --version
 python3 helper.py --self-test
 ```

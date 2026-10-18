@@ -5,7 +5,7 @@ import random
 import re
 import sys
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 MODEL = "veo-3.1-lite"
 DUR = "8s"
 TRAILER = ("One single frame of one composed scene \u2014 a single shot. No storyboard, no panels,\n"
@@ -57,8 +57,15 @@ def status_block(nclips=2):
             "image: flow-first single frame | audio: ambient-only, no text")
 
 
-def image_prompt(idea):
-    idea = sanitize(idea)
+def story_text(idea, master=""):
+    s = sanitize(idea)
+    if master:
+        s += f". Master details, same in every clip: {sanitize(master)}"
+    return s
+
+
+def image_prompt(idea, master=""):
+    idea = story_text(idea, master)
     move = pick_movement(idea)
     base = (f"Stylized 3D animated scene (not photorealistic humans): {idea}. "
             f"Eye-level medium-wide shot, {move}, single composed scene, "
@@ -66,9 +73,9 @@ def image_prompt(idea):
     return f"{base}\n{TRAILER}"
 
 
-def clip_video(idea, k, n):
+def clip_video(idea, k, n, master=""):
     # shortcut: the action beat is generic (brace, dust, storm) for every story, upgrade with per-story beats when stories need distinct actions.
-    idea = sanitize(idea)
+    idea = story_text(idea, master)
     move = pick_movement(idea)
     return clean(
         f"Clip {k} of {n}, 0-8s, one continuous shot. Story: {idea}. "
@@ -91,7 +98,7 @@ def clip2_extend_delta():
         "Audio: same ambient storm tone continues, no speech.")
 
 
-def build(idea="", clips=None, extend=False):
+def build(idea="", clips=None, extend=False, master=""):
     idea = clean(idea) or random.choice(STORIES)
     if clips is None:
         clips = random.randint(1, 3)
@@ -100,16 +107,16 @@ def build(idea="", clips=None, extend=False):
     s1, s2 = status_block(clips)
     out = [s1, s2, "",
            "--- CLIP 1 IMAGE (generate inside Flow) ---",
-           image_prompt(idea), "",
+           image_prompt(idea, master), "",
            "--- CLIP 1 VIDEO (8s, Veo 3.1 Lite, ingredient: Clip 1 image) ---",
-           clip_video(idea, 1, clips)]
+           clip_video(idea, 1, clips, master)]
     for k in range(2, clips + 1):
         if extend:
             out += ["", f"--- CLIP {k} EXTEND (8s, Veo 3.1 Lite Extend, no image) ---",
                     clip2_extend_delta()]
         else:
             out += ["", f"--- CLIP {k} VIDEO (8s, Veo 3.1 Lite, ingredient: Clip 1 image) ---",
-                    clip_video(idea, k, clips)]
+                    clip_video(idea, k, clips, master)]
     return "\n".join(out)
 
 
@@ -142,6 +149,9 @@ def self_test():
     five = build("storm keeper", clips=5)
     assert five.count("--- CLIP ") == 1 + 1 + 4, five.count("--- CLIP ")
     assert "clips: 5" in five
+    m = "hooded keeper, long grey coat, silver beard, lantern in left hand"
+    mb = build("storm keeper", clips=3, master=m)
+    assert mb.count(m) == 4, mb.count(m)
     ingr = build("storm keeper", clips=3)
     assert ingr.count("ingredient: Clip 1 image") == 3
     assert "EXTEND" not in ingr
@@ -162,6 +172,7 @@ def main(argv=None):
     p.add_argument("--clips", type=int, default=None, help="number of 8s clips, 1-5 (default: random 1-3)")
     p.add_argument("--single", action="store_true", help="only Clip 1 (same as --clips 1)")
     p.add_argument("--extend", action="store_true", help="clips 2+ use Extend instead of the Clip 1 image as ingredient")
+    p.add_argument("--master", default="", help="character, setting, palette details reused verbatim in every prompt")
     p.add_argument("--self-test", action="store_true", help="run built-in checks")
     a = p.parse_args(argv)
     if a.self_test:
@@ -169,7 +180,7 @@ def main(argv=None):
         return 0
     idea = a.idea or clean(sys.stdin.read())
     try:
-        print(build(idea, clips=1 if a.single else a.clips, extend=a.extend))
+        print(build(idea, clips=1 if a.single else a.clips, extend=a.extend, master=a.master))
     except ValueError as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
