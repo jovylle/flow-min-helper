@@ -32,6 +32,8 @@ If the user says single, output Clip 1 only.
 - Flow-first images: image prompt is generated inside Flow, one single frame of one shot, never a storyboard/panel/grid.
 - No photoreal humans. Rewrite photoreal/real-person asks as `stylized 3D animated figure`. Image and video always say stylized 3D animation, not photorealistic humans.
 - Audio is ambient-only by default: no dialogue, no narration, no subtitles, no captions, no text overlays. Only use user-supplied speech verbatim.
+- Never invent speech. If the user supplies no dialogue, script, or narration request, output zero spoken lines and no "suggested narration/captions" section anywhere — not in prompts, not in chat. Supplied speech is quoted verbatim, in quotation marks, in its clip only.
+- Describe characters, never name them inside prompt blocks. Every image and video prompt restates each character's full physical description (age, hair, wardrobe, features). Names (Mia, Leo) may appear in chat labels only — Veo has no memory of names, so a named prompt renders a stranger.
 - One dominant action per clip. Reliable effects only: rain, lightning, wind on cloth/debris, dust drift, breakage appearance, close-up reveal, one stumble/knee bend.
 - Hold orientation within a clip. A turn/reveal is its own clip, never a secondary move.
 
