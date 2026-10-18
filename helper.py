@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""flow-min-helper: 1-line idea -> Clip 1 image prompt + 2x 8s Veo 3.1 Lite prompts. stdlib only."""
+"""flow-min-helper: 1-line idea -> Clip 1 image prompt + 1-5x 8s Veo 3.1 Lite prompts. stdlib only."""
 import argparse
 import random
 import re
 import sys
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 MODEL = "veo-3.1-lite"
 DUR = "8s"
 TRAILER = ("One single frame of one composed scene \u2014 a single shot. No storyboard, no panels,\n"
@@ -18,8 +18,8 @@ MOVEMENTS = ["slow push-in", "slow pull-back", "slow pan right", "slow pan left"
              "slow tilt up", "slow tilt down", "static shot", "tracking shot", "orbit shot"]
 # shortcut: three hand-written ideas picked at random when no idea is given, upgrade to model-written or a larger list when repeats show.
 STORIES = [
-    "hooded keeper in a ruined courtyard as storm gathers",
-    "a lighthouse keeper signals through dust as storm gathers",
+    "hooded keeper in a ruined courtyard as storm gathers, distant thunder, cold moonlight",
+    "a lighthouse keeper signals through dust as storm gathers, distant thunder, moody night",
     "a lone courier crosses a flooded harbor at night as lightning cracks",
 ]
 
@@ -54,7 +54,7 @@ def sanitize(idea):
 
 def status_block(nclips=2):
     return (f"model: {MODEL} | {DUR} only | clips: {nclips} | extend: Lite-only",
-            "image: flow-first single frame | audio: ambient-only, no text")
+            "image: ChatGPT-first single frame | audio: ambient-only, no text")
 
 
 def story_text(idea, master=""):
@@ -69,34 +69,35 @@ def image_prompt(idea, master=""):
     move = pick_movement(idea)
     base = (f"Stylized 3D animated scene (not photorealistic humans): {idea}. "
             f"Eye-level medium-wide shot, {move}, single composed scene, "
-            f"moody night lighting, cool palette with warm accent, cinematic grade, portrait 9:16.")
+            f"natural light, cinematic grade, palette as the story describes, portrait 9:16.")
     return f"{base}\n{TRAILER}"
 
 
 def clip_video(idea, k, n, master=""):
-    # shortcut: the action beat is generic (brace, dust, storm) for every story, upgrade with per-story beats when stories need distinct actions.
+    # shortcut: one generic dominant action per clip, not per story; upgrade with per-story beats when stories need specific actions.
     idea = story_text(idea, master)
     move = pick_movement(idea)
     return clean(
-        f"Clip {k} of {n}, 0-8s, one continuous shot. Story: {idea}. "
-        f"STYLE LOCK: stylized 3D animation, cool palette, night light, no photoreal humans. "
+        f"Clip {k} of {n}, 0-8s, one continuous shot. "
+        f"CAMERA FIRST: eye-level medium-wide shot, {move}, camera holds orientation. "
+        f"Story: {idea}. "
+        f"STYLE LOCK: stylized 3D animation, no photoreal humans. "
         f"Match Clip 1 ingredient image look (medium, palette, lighting, grade); subject and composition unchanged. "
-        f"CAMERA FIRST: eye-level medium-wide shot, {move}, camera holds orientation, no shake. "
-        f"Subject and setting as in the story; one dominant action: subject braces as wind rises and dust swirls. "
-        f"Lighting: cold moonlight, volumetric dust, consistent grade. "
+        f"One dominant action from the story, with at most one strong effect. "
         f"Continuity: same figure, wardrobe, location, and props as the Clip 1 image and story text. "
         f"Add nothing that is not in the story or the Clip 1 image. "
-        f"Audio: ambient wind, cloth movement, distant thunder. No dialogue, no narration, "
-        f"no subtitles, no captions, no text overlays. "
-        f"End: subject braced facing storm, framing held for Extend.")
+        f"Audio: ambient sounds named in the story only. "
+        f"Negatives: no camera shake, no dialogue, no narration, no subtitles, no captions, "
+        f"no text overlays, no new people, objects, or locations. "
+        f"End: subject in a held pose from the story.")
 
 
 def clip2_extend_delta():
     return clean(
         "Continue the previous clip's final frame, framing, and camera movement with no cut or new shot. "
-        "A lightning flash brightens the scene and dust surges past as the subject sinks slightly to one knee. "
-        "Settle holding that braced pose with storm ambient ongoing, ready to chain further. "
-        "Audio: same ambient storm tone continues, no speech.")
+        "Apply one small change taken from the story, and nothing new. "
+        "Let the subject settle into a held end state as the scene holds. "
+        "Keep the same ambient sound continuing, with no speech, narration, subtitles, or text overlays.")
 
 
 def build(idea="", clips=None, extend=False, master=""):
@@ -107,7 +108,7 @@ def build(idea="", clips=None, extend=False, master=""):
         raise ValueError("clips must be 1-5")
     s1, s2 = status_block(clips)
     out = [s1, s2, "",
-           "--- CLIP 1 IMAGE (generate inside Flow) ---",
+           "--- CLIP 1 IMAGE (generate in-chat) ---",
            image_prompt(idea, master), "",
            "--- CLIP 1 VIDEO (8s, Veo 3.1 Lite, ingredient: Clip 1 image) ---",
            clip_video(idea, 1, clips, master)]
@@ -129,11 +130,12 @@ def self_test():
     assert "9:16" in img and "portrait" in img.lower()
     c1 = clip_video("storm keeper test", 1, 2)
     assert "ingredient image" in c1.lower()
-    assert "no shake" in c1.lower()
+    assert "no camera shake" in c1.lower()
     low = c1.lower()
     assert sum(m in low for m in MOVEMENTS) == 1, "must name exactly one movement"
     for bad in ["no dialogue", "no subtitles", "ambient"]:
         assert bad in low, bad
+    assert c1.index("eye-level") < c1.index("Story:"), "camera must come first"
     c2 = clip2_extend_delta()
     n = len(c2.split())
     assert 30 <= n <= 90, f"extend delta {n} words"
@@ -147,6 +149,10 @@ def self_test():
         out = build()
         n = int(re.search(r"clips: (\d)", out).group(1))
         assert 1 <= n <= 3 and out.count("VIDEO (") + out.count("EXTEND (") == n, (seed, n)
+    farm = build("a struggling pig farmer watches her pigs as imported pork gets cheaper", clips=3)
+    for bad in ["thunder", "lightning", "night", "storm", "knee", "flow"]:
+        assert bad not in farm.lower(), bad
+    assert "generate in-chat" in farm
     five = build("storm keeper", clips=5)
     assert five.count("--- CLIP ") == 1 + 1 + 4, five.count("--- CLIP ")
     assert "clips: 5" in five
@@ -163,7 +169,7 @@ def self_test():
         raise AssertionError("clips=6 must fail")
     except ValueError:
         pass
-    print("self-test: OK (image trailer, 1-move, ambient-only, extend 40-70w, status 2-line, 1-5 clips, ingredient default, extend opt-in)")
+    print("self-test: OK (camera first, plain negatives, no hardcoded storm on non-storm ideas, 1-5 clips, ingredient default, extend opt-in)")
 
 
 def main(argv=None):

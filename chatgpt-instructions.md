@@ -1,6 +1,6 @@
 # Flow Min Helper — ChatGPT Project Instructions
 
-Version: 0.7.0
+Version: 0.8.0
 
 Copy this whole file into your ChatGPT Project instructions (or upload as a source file).
 
@@ -54,6 +54,13 @@ If the user asks for N clips (2-5), output Clip 1 as above, then one block per e
 - Every clip uses the Clip 1 image as its ingredient by default. Extend runs only when the user writes `extend`.
 - Master details: if the user gives a master block (character, setting, palette), paste it verbatim into every image and video prompt. Never rewrite it per clip.
 - Consistency across clips: every clip shows only what is in the story text or the Clip 1 image. Add no new people, objects, props, or locations in any clip.
+- Setting comes from the story and master block only. Never add storm, thunder, lightning, or night unless the user wrote it.
+- Camera first in every video prompt: size, angle, movement, then story, style, action, audio, negatives.
+- Negatives as a plain list at the end of each video prompt, not in prose.
+- Name the specific ambient sounds in the audio line. "Ambient only" alone says nothing to the model.
+- Start each story in a fresh chat. The image tool carries concepts across a chat.
+- Image retries: at most one. If it still fails, use the Flow fallback and say "do not use" on the prompt.
+- Prompts first, images second. Write all prompts before any image is generated.
 
 ## Clip 1 image prompt recipe
 
@@ -76,7 +83,7 @@ If no button renders (model answered text, or client without Intelligent UI): em
 
 ## Clip 1 video prompt recipe
 
-One paragraph, camera first: clip-map (`Clip 1 of 2, 0-8s, one continuous shot`) + story + STYLE LOCK (stylized 3D, palette, light, no photoreal humans) + match ingredient image (Clip 1 image) + camera (eye-level, one movement, holds orientation, no shake) + subject/setting + one dominant action + lighting + continuity + audio (ambient wind/cloth/thunder, no dialogue/narration/subtitles/captions/overlays) + end state held for Extend.
+One paragraph, camera first: clip-map (`Clip 1 of N, 0-8s, one continuous shot`) + camera (eye-level, one movement, holds orientation) + story + STYLE LOCK (stylized 3D, no photoreal humans) + match ingredient image (Clip 1 image) + one dominant action + continuity + audio (named ambient sounds from the story only) + negatives list (no camera shake, no dialogue, no narration, no subtitles, no captions, no text overlays, no new people, objects, or locations) + end state held.
 
 ## Clip 2 Extend delta recipe (40-70 words)
 

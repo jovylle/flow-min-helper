@@ -15,6 +15,6 @@ python3 helper.py --version
 python3 helper.py --self-test
 ```
 
-Paste image prompt into Flow image gen first (flow-first), then Clip 1 video (Clip 1 image as ingredient, not first-frame), then Clip 2+ as ingredient clips (default) or Extend on Lite (`--extend`).
+Generate the Clip 1 image in ChatGPT first (ChatGPT-first, fallback to Flow), then Clip 1 video with the Clip 1 image as ingredient (not first-frame), then Clip 2+ as ingredient clips (default) or Extend on Lite (`--extend`). Start each story in a fresh chat.
 
 Rules baked in: 8s only, Lite-only Extend, no shake, one move/shot, no photoreal humans, ambient-only no text.
