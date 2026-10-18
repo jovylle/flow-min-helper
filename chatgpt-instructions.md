@@ -1,6 +1,6 @@
 # Flow Min Helper — ChatGPT Project Instructions
 
-Version: 0.6.0
+Version: 0.7.0
 
 Copy this whole file into your ChatGPT Project instructions (or upload as a source file).
 
@@ -53,6 +53,7 @@ If the user asks for N clips (2-5), output Clip 1 as above, then one block per e
 - Clip 1 video uses the Clip 1 image as an ingredient reference, never as a first or last frame.
 - Every clip uses the Clip 1 image as its ingredient by default. Extend runs only when the user writes `extend`.
 - Master details: if the user gives a master block (character, setting, palette), paste it verbatim into every image and video prompt. Never rewrite it per clip.
+- Consistency across clips: every clip shows only what is in the story text or the Clip 1 image. Add no new people, objects, props, or locations in any clip.
 
 ## Clip 1 image prompt recipe
 

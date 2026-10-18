@@ -5,7 +5,7 @@ import random
 import re
 import sys
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 MODEL = "veo-3.1-lite"
 DUR = "8s"
 TRAILER = ("One single frame of one composed scene \u2014 a single shot. No storyboard, no panels,\n"
@@ -84,7 +84,8 @@ def clip_video(idea, k, n, master=""):
         f"CAMERA FIRST: eye-level medium-wide shot, {move}, camera holds orientation, no shake. "
         f"Subject and setting as in the story; one dominant action: subject braces as wind rises and dust swirls. "
         f"Lighting: cold moonlight, volumetric dust, consistent grade. "
-        f"Continuity: same figure, wardrobe, location throughout. "
+        f"Continuity: same figure, wardrobe, location, and props as the Clip 1 image and story text. "
+        f"Add nothing that is not in the story or the Clip 1 image. "
         f"Audio: ambient wind, cloth movement, distant thunder. No dialogue, no narration, "
         f"no subtitles, no captions, no text overlays. "
         f"End: subject braced facing storm, framing held for Extend.")
