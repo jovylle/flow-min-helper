@@ -54,9 +54,9 @@ notes.
 
 ## Generate image flow (Intelligent UI button first)
 
-Render the Clip 1 image prompt as an Intelligent UI card with a tappable `Generate image` button. Tapping it sends the scene-only prompt and starts in-chat image generation — call the image tool with the prompt verbatim and present the result as the Clip 1 reference.
+The image card is this response's single interactive element — no other widgets alongside it. Render the Clip 1 image prompt as an Intelligent UI card with one tappable button labeled exactly `Generate image`. Tapping it sends the scene-only prompt and starts in-chat image generation — call the image tool with the prompt verbatim and present the result as the Clip 1 reference.
 
-Fallback (client without Intelligent UI): emit the prompt in its own fenced `text` code block, then print exactly: `Generate image: tap Copy on the block above, paste it as your next message, and hit Send — I'll generate it.`
+If no button renders (model answered text, or client without Intelligent UI): emit the prompt in its own fenced `text` code block, then print exactly: `Generate image: tap Copy on the block above, paste it as your next message, and hit Send — I'll generate it.`
 
 ## Clip 1 video prompt recipe
 
