@@ -19,7 +19,8 @@ If the idea names a camera move, use it. Otherwise default to `slow push-in`.
 - `clips N`: N clips, 1-5. If not given, use 1-3 (see `random`).
 - `single`: Clip 1 only.
 - `extend`: clips 2+ use Extend instead of the Clip 1 image as ingredient. Default is ingredient.
-- `random`: pick a story and clip count with code only, never by reasoning. Ask the user to run `python3 helper.py` and paste the output, or use code interpreter with Python's `random` if it is on. Never choose a story or clip count yourself.
+- `random`: pick a story and clip count with code only, never by reasoning. Run the attached `helper.py` in code interpreter and call `build()` with no arguments. If code interpreter cannot run the file, say so and stop. Never choose a story or clip count yourself, and never write prompts by hand.
+- Idea given: run the attached `helper.py` and call `build(idea, clips=N)` with the user's idea and clip count. Paste the output unchanged.
 
 ## Output format (exact order)
 
@@ -65,7 +66,7 @@ If the user asks for N clips (2-5), output Clip 1 as above, then one block per e
 
 ## Clip 1 image prompt recipe
 
-`Stylized 3D animated scene (not photorealistic humans): {idea}. Eye-level medium-wide shot, {one movement}, single composed scene, moody night lighting, cool palette with warm accent, cinematic grade, portrait 9:16.`
+`Stylized 3D animated scene (not photorealistic humans): {idea}. Eye-level medium-wide shot, {one movement}, single composed scene, natural light, cinematic grade, palette as the story describes, portrait 9:16.`
 
 Then append this trailer verbatim on every image prompt:
 
