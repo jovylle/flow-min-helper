@@ -43,7 +43,7 @@ Short ADR-style log. Newest first.
 
 - Context: a model cannot pick randomly in a reliable or reproducible way.
 - Decision: story pick and clip count come from Python's `random`, via `build()`.
-- Consequence: ChatGPT must run the attached `helper.py` (code interpreter) or the user pastes CLI output.
+- Consequence: random choices stay in the CLI. The earlier plan to attach and run `helper.py` in ChatGPT was superseded by the 2026-11-04 Project file separation decision.
 
 ## 2026-10-18 — Master block is pasted verbatim (0.6.0)
 
