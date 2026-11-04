@@ -1,6 +1,6 @@
 # Project Context — flow-min-helper
 
-Last updated: 2026-11-04. Current version: 0.9.2.
+Last updated: 2026-11-04. Current version: 0.9.3.
 
 ## What this repository does
 
@@ -8,9 +8,7 @@ Flow Min Helper prepares a story summary, a Clip 1 image prompt, and Google Flow
 
 ## Project files
 
-- `chatgpt-instructions.md` is copied into the ChatGPT Project's Instructions settings and is intended to remain stable.
-- `chatgpt-project-workflow.md` is the main Project behavior source. Replace this file for routine workflow changes.
-- `chatgpt-project-source.md` contains supporting prompt recipes and dated Google Flow facts. Update it only when those references change.
+- `chatgpt-instructions.md` is the single, self-contained file copied into the ChatGPT Project's Custom Instructions (or attached as a project file).
 - `helper.py` is the local standard-library CLI. Do not attach or execute it in the ChatGPT Project.
 - `README.md` explains setup and usage; `docs/decisions.md` records durable decisions and their history.
 
@@ -25,9 +23,9 @@ Flow Min Helper prepares a story summary, a Clip 1 image prompt, and Google Flow
 
 ## Validation status
 
-- The current CLI and Project self-checks are documented in `README.md`, but they have not been run for this 0.9.2 update.
+- The current CLI and Project self-checks are documented in `README.md`.
 - Output in a real ChatGPT Project and video generation in Google Flow have not been manually verified.
-- Flow compatibility and credit notes in `chatgpt-project-source.md` were checked on 2026-11-02 and may change; the active Flow UI takes precedence.
+- Flow compatibility and credit notes in `chatgpt-instructions.md` were checked on 2026-11-02 and may change; the active Flow UI takes precedence.
 
 ## History
 

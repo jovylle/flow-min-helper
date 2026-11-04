@@ -6,11 +6,11 @@ Prepare a Clip 1 image prompt and 1–5 Google Flow video prompts from a story i
 
 ### ChatGPT Project — supplied idea
 
-**Starting assumptions:** You can open the target ChatGPT Project, have `chatgpt-project-workflow.md` and `chatgpt-project-source.md` ready, and have an idea. Attach both source files and paste `chatgpt-instructions.md` into the Project's Instructions settings once.
+**Starting assumptions:** You can open the target ChatGPT Project, have `chatgpt-instructions.md` ready, and have an idea. Paste `chatgpt-instructions.md` into the Project's Instructions settings (or attach/upload it as a project file).
 
 **First useful result:** A story-only 2–3 sentence summary, a ChatGPT image-generation prompt, and two copy-ready Veo 3.1 Lite video prompts for Google Flow, each with its own link. At the start of each Project chat, ChatGPT asks which Flow user route to use (0–9), unless the user already chose one. A direct idea with no count defaults to two clips after route selection; `clips N` means 1–5 and `single` means one. ChatGPT is the default image source; Flow is optional before the first image.
 
-**Target time:** 1–2 minutes for an already configured Project prompt bundle, excluding image/video generation. A fresh Project setup target is 5–10 minutes when account access and both source files are ready. These are targets, not observed timings. Account access and current Project settings behavior are user-specific.
+**Target time:** 1–2 minutes for an already configured Project prompt bundle, excluding image/video generation. A fresh Project setup target is 5–10 minutes when account access and instructions are ready. These are targets, not observed timings. Account access and current Project settings behavior are user-specific.
 
 ### Local CLI — idea or random selection
 
@@ -22,12 +22,11 @@ Prepare a Clip 1 image prompt and 1–5 Google Flow video prompts from a story i
 
 ## Project setup and manual update
 
-1. Attach `chatgpt-project-workflow.md` and `chatgpt-project-source.md` to the target Project's Sources.
-2. Copy `chatgpt-instructions.md` into the Project's Instructions settings and save. It stays well below the 8,000-character limit shown in the user's current settings UI; the UI remains authoritative.
-3. For routine workflow updates, replace only `chatgpt-project-workflow.md`. Replace `chatgpt-project-source.md` only when its prompt recipes or Flow reference facts change. Keep the Project Instructions stable.
-4. Confirm both source files are present and the Instructions save.
+1. Copy `chatgpt-instructions.md` into your target Project's Instructions settings and save (or attach/upload it as a project file).
+2. For updates, simply update the Instructions with the new `chatgpt-instructions.md`.
+3. Confirm the Instructions save or the file is uploaded.
 
-There is no repo-to-Project runtime connection or automatic sync. The user manually installs two Project source files and sets the Project Instructions once. The Project cannot execute `helper.py`; random story/count selection still runs through the local CLI. Do not modify a Project as part of repository changes.
+There is no repo-to-Project runtime connection or automatic sync. The user manually installs `chatgpt-instructions.md` once. The Project cannot execute `helper.py`; random story/count selection still runs through the local CLI. Do not modify a Project as part of repository changes.
 
 ## Usage
 
@@ -107,4 +106,4 @@ After installing both Project sources and the Instructions, manually verify:
 - ChatGPT is the default and Flow is an optional initial source; both use the same acceptance checklist and shared one-additional-attempt limit.
 - Failures, refusals, empty results, mismatches, revised-prompt approval, declined retries, and unbound drafts follow the acceptance rules. A Flow image outside the Project is attached or explicitly user-checked; the Project never claims to inspect an unseen image.
 - Mukbang prompts use photorealistic, hyperrealistic close-ups with food near the lens; natural, action-synced eating sounds plus ambience; and immediate eating without commentary, a pause, or camera smile.
-- `chatgpt-instructions.md` saves; `chatgpt-project-workflow.md` and `chatgpt-project-source.md` are attached; `helper.py` remains local.
+- `chatgpt-instructions.md` saves or is attached; `helper.py` remains local.

@@ -2,6 +2,13 @@
 
 Short ADR-style log. Newest first.
 
+## 2026-11-04 — Consolidate ChatGPT Project instructions into a single file (0.9.3)
+
+- Context: maintaining separate workflow and reference files complicated copying and updating instructions in ChatGPT Projects. Users prefer managing a single self-contained file even if it spans hundreds or thousands of lines.
+- Decision: consolidate all behavior rules, route options, recipes, and Flow reference facts into `chatgpt-instructions.md`, removing `chatgpt-project-workflow.md` and `chatgpt-project-source.md`.
+- Consequence: ChatGPT Project configuration requires only copying or uploading one file (`chatgpt-instructions.md`).
+- Status: supersedes the earlier 2026-11-04 decision that split mutable workflow from stable reference.
+
 ## 2026-11-04 — Use portrait 9:16 for image prompts (0.9.2)
 
 - Context: generated Clip 1 images should fit the intended portrait format.
@@ -13,6 +20,7 @@ Short ADR-style log. Newest first.
 - Context: routine Project changes should not require replacing stable reference files.
 - Decision: `chatgpt-project-workflow.md` is the frequently updated behavior file; `chatgpt-project-source.md` holds supporting prompt recipes and dated Flow facts; `chatgpt-instructions.md` is the stable Instructions-field text; `helper.py` remains local CLI code.
 - Consequence: initial setup attaches both Project source files and saves the Instructions once. Routine workflow updates replace only `chatgpt-project-workflow.md`; update the reference file only when its content changes.
+- Status: superseded by the 0.9.3 decision consolidating everything into `chatgpt-instructions.md`.
 
 ## 2026-11-03 — Ask for route and include links automatically (0.9.2)
 

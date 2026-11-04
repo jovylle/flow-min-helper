@@ -5,7 +5,7 @@ import random
 import re
 import sys
 
-__version__ = "0.9.2"
+__version__ = "0.9.3"
 MODEL = "veo-3.1-lite"
 DUR = "8s"
 TRAILER = ("One single frame of one composed scene \u2014 a single shot. No storyboard, no panels,\n"
@@ -218,12 +218,9 @@ def self_test():
     assert "no new people, objects, or locations" in hostile.lower()
 
     instructions = Path(__file__).with_name("chatgpt-instructions.md").read_text(encoding="utf-8")
-    project_workflow = Path(__file__).with_name("chatgpt-project-workflow.md").read_text(encoding="utf-8")
-    project_reference = Path(__file__).with_name("chatgpt-project-source.md").read_text(encoding="utf-8")
     readme = Path(__file__).with_name("README.md").read_text(encoding="utf-8")
     assert f"Version: {__version__}" in instructions, "helper and Project instruction versions differ"
-    assert f"Version: {__version__}" in project_workflow, "helper and Project workflow versions differ"
-    for text in (project_reference, readme):
+    for text in (instructions, readme):
         assert "4, 6, or 8 seconds" in text
         assert "Ingredients/references-to-video and Extend are 8 seconds" in text
         assert "video-to-video" in text.lower()
@@ -233,8 +230,8 @@ def self_test():
     assert len(checklist) >= 5, "README shared invariant checklist missing"
     for required in ["identity", "single frame", "Clip 1 image", "8 seconds"]:
         assert any(required.lower() in item.lower() for item in checklist), required
-    assert "one user-approved additional generation across ChatGPT and Flow" in project_workflow
-    assert "implicit platform-level conversation conditioning" in project_workflow
+    assert "one user-approved additional generation across ChatGPT and Flow" in instructions
+    assert "implicit platform-level conversation conditioning" in instructions
 
     # Exercise the actual parser/entry point, including TTY and pipe defaults.
     with patch.object(random, "choice", return_value=STORIES[1]) as choose, \
