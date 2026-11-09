@@ -1,6 +1,6 @@
 # Project Context — flow-min-helper
 
-Last updated: 2026-11-08. Current version: 0.9.5.
+Last updated: 2026-11-10. Current version: 0.9.5.
 
 ## What this repository does
 
@@ -19,6 +19,7 @@ Flow Min Helper prepares a story summary, a Clip 1 image prompt, and Google Flow
 - Clip 1 image prompts specify portrait 9:16 unless the user requests another aspect ratio.
 - Clip 2+ use the accepted Clip 1 image as ingredient/reference by default. Extend is opt-in, uses Omni 1.2 Flash, and can optionally use an accepted image ingredient, per the user's Flow update; check the current UI.
 - Prompts preserve the supplied story and accepted image; do not invent people, props, locations, dialogue, or story events.
+- Mukbang prompts visibly dip applicable foods before biting when a dipping sauce is supplied; the first image starts at the dip when necessary.
 - The Project never asks for a Flow account route. Links are `https://flow.google.com/?prompt=…` with no `/u/N/` segment, so the browser's signed-in account decides. A supplied idea defaults to two clips and each video prompt gets its own link.
 
 ## Validation status

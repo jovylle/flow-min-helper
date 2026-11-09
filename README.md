@@ -22,7 +22,7 @@ Prepare a Clip 1 image prompt and 1–5 Google Flow video prompts from a story i
 
 ### ChatGPT Project — mukbang, no commentary
 
-For silent mukbang eating videos, paste `mukbang-instructions.md` into a separate Project instead. It always uses photorealistic close-ups, ASMR eating sounds plus ambience, and no commentary, narration, dialogue, or music. Each clip swaps to the next food in the spread (put down, pick up, bite), eaten food never regenerates, and the camera stays tight on the food with only the face visible. It asks for the food spread when none is given and never picks one at random.
+For silent mukbang eating videos, paste `mukbang-instructions.md` into a separate Project instead. It always uses photorealistic close-ups, ASMR eating sounds plus ambience, and no commentary, narration, dialogue, or music. Each clip swaps to the next food in the spread (put down, pick up, dip if applicable, bite), eaten food never regenerates, and the camera stays tight on the food with only the face visible. It asks for the food spread when none is given and never picks one at random.
 
 ## Project setup and manual update
 

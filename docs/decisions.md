@@ -2,6 +2,10 @@
 
 Short ADR-style log. Newest first.
 
+## 2026-11-10 — Dip before biting
+
+- When a dipping sauce is supplied, show the applicable food being dipped before its bite, including later and Extend clips. Start the first image at the dip instead of mid-bite when needed; sauce coatings alone do not imply dipping.
+
 ## 2026-11-08 — Omni Extend and image ingredients (0.9.5)
 
 - Context: the user reports Flow Extend now uses Omni 1.2 Flash and accepts an image ingredient.
