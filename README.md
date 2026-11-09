@@ -20,6 +20,10 @@ Prepare a Clip 1 image prompt and 1–5 Google Flow video prompts from a story i
 
 **Target time:** Under 1 minute once the repository and Python 3 are ready. This is a target, not an observed timing. Python installation and repository availability may vary.
 
+### ChatGPT Project — mukbang, no commentary
+
+For silent mukbang eating videos, paste `mukbang-instructions.md` into a separate Project instead. It always uses photorealistic close-ups, ASMR eating sounds plus ambience, and no commentary, narration, dialogue, or music. Each clip swaps to the next food in the spread (put down, pick up, bite), eaten food never regenerates, and the camera stays tight on the food with only the face visible. It asks for the food spread when none is given and never picks one at random.
+
 ## Project setup and manual update
 
 1. Copy `chatgpt-instructions.md` into your target Project's Instructions settings and save (or attach/upload it as a project file).
