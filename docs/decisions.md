@@ -2,6 +2,19 @@
 
 Short ADR-style log. Newest first.
 
+## 2026-11-08 — Omni Extend and image ingredients (0.9.5)
+
+- Context: the user reports Flow Extend now uses Omni 1.2 Flash and accepts an image ingredient.
+- Decision: retain opt-in Extend, continue the preceding video, and allow an accepted image ingredient. Honor requested durations in the Project; the CLI keeps its 8-second default. Preserve requested speech and story beats without contradictory audio status.
+- Consequence: verify model, ingredient controls, and duration in Flow; this capability report has not been independently verified. Supersedes the earlier Lite-only, no-image Extend guidance.
+
+## 2026-11-06 — No Flow account route in links (0.9.4)
+
+- Context: asking "which Flow user, 0–9" at the start of every Project chat cost a turn and forced the user to know which digit mapped to which Google account. The user's preference is the default of no account at all.
+- Decision: links are `https://flow.google.com/?prompt={encoded}` with no `/u/N/` segment; the browser's signed-in account decides. The route question, the `Flow route:` status field, and the awaiting-choice state are removed. A user-named `/u/N/` is honored for that one reply only.
+- Consequence: prompts are delivered in the first response with nothing to wait for. Trade-off: with several accounts signed in, the browser default wins, so a link can open a different credit pool than intended; the manual escape hatch is the user typing `Flow user N` or pasting the fenced prompt.
+- Status: supersedes the 2026-11-03 route-selection decision.
+
 ## 2026-11-04 — Consolidate ChatGPT Project instructions into a single file (0.9.3)
 
 - Context: maintaining separate workflow and reference files complicated copying and updating instructions in ChatGPT Projects. Users prefer managing a single self-contained file even if it spans hundreds or thousands of lines.

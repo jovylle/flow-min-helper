@@ -1,6 +1,6 @@
 # Project Context — flow-min-helper
 
-Last updated: 2026-11-04. Current version: 0.9.3.
+Last updated: 2026-11-08. Current version: 0.9.5.
 
 ## What this repository does
 
@@ -17,9 +17,9 @@ Flow Min Helper prepares a story summary, a Clip 1 image prompt, and Google Flow
 - Random story and clip-count choices use Python's `random` module in `helper.py`; the Project never chooses randomly.
 - No-idea defaults to a random story and 1–3 clips. For an idea without an explicit count, the CLI also chooses 1–3 clips. `--clips` accepts 1–5; `--single` selects one.
 - Clip 1 image prompts specify portrait 9:16 unless the user requests another aspect ratio.
-- Clip 2+ use the accepted Clip 1 image as ingredient/reference by default. Extend is opt-in.
+- Clip 2+ use the accepted Clip 1 image as ingredient/reference by default. Extend is opt-in, uses Omni 1.2 Flash, and can optionally use an accepted image ingredient, per the user's Flow update; check the current UI.
 - Prompts preserve the supplied story and accepted image; do not invent people, props, locations, dialogue, or story events.
-- The Project asks for a Flow route from 0 to 9 at the start of a new chat unless the user already supplied one. It defaults to two clips for a supplied idea and includes a separate Flow link for each video prompt.
+- The Project never asks for a Flow account route. Links are `https://flow.google.com/?prompt=…` with no `/u/N/` segment, so the browser's signed-in account decides. A supplied idea defaults to two clips and each video prompt gets its own link.
 
 ## Validation status
 

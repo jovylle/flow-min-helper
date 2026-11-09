@@ -8,7 +8,7 @@ Prepare a Clip 1 image prompt and 1–5 Google Flow video prompts from a story i
 
 **Starting assumptions:** You can open the target ChatGPT Project, have `chatgpt-instructions.md` ready, and have an idea. Paste `chatgpt-instructions.md` into the Project's Instructions settings (or attach/upload it as a project file).
 
-**First useful result:** A story-only 2–3 sentence summary, a ChatGPT image-generation prompt, and two copy-ready Veo 3.1 Lite video prompts for Google Flow, each with its own link. At the start of each Project chat, ChatGPT asks which Flow user route to use (0–9), unless the user already chose one. A direct idea with no count defaults to two clips after route selection; `clips N` means 1–5 and `single` means one. ChatGPT is the default image source; Flow is optional before the first image.
+**First useful result:** A story-only 2–3 sentence summary, a ChatGPT image-generation prompt, and two copy-ready Veo 3.1 Lite video prompts for Google Flow, each with its own link. Links carry no account route, so there is no per-chat Flow user question and the browser's signed-in account decides. A direct idea with no count defaults to two clips; `clips N` means 1–5 and `single` means one. ChatGPT is the default image source; Flow is optional before the first image.
 
 **Target time:** 1–2 minutes for an already configured Project prompt bundle, excluding image/video generation. A fresh Project setup target is 5–10 minutes when account access and instructions are ready. These are targets, not observed timings. Account access and current Project settings behavior are user-specific.
 
@@ -35,18 +35,18 @@ python3 helper.py "a lighthouse keeper signals through dust as storm gathers"
 python3 helper.py                       # random story and random 1-3 clips
 python3 helper.py "idea..." --single   # Clip 1 only
 python3 helper.py "idea..." --clips 5  # explicit count, 1-5
-python3 helper.py "idea..." --extend   # clips 2+ use Lite Extend
+python3 helper.py "idea..." --extend   # clips 2+ use Omni 1.2 Flash Extend
 python3 helper.py "idea..." --master "hooded keeper, grey coat"
 python3 helper.py --version
 python3 helper.py --self-test
 ```
 
-`--clips` accepts integers 1–5. `--single` selects one clip. `--extend` is opt-in; otherwise clips 2+ use the Clip 1 image as ingredient/reference. `--master` repeats character, setting, or palette details. `--summary` supplies a story summary for CLI output. When input is piped, the text is used as the idea; an empty or whitespace-only pipe falls back to random story/count defaults.
+`--clips` accepts integers 1–5. `--single` selects one clip. `--extend` is opt-in; otherwise clips 2+ use the Clip 1 image as ingredient/reference. Extend continues the preceding video and can optionally use the accepted image as an ingredient. The CLI defaults to 8-second clips; check available Extend durations in Flow. `--master` repeats character, setting, or palette details. `--summary` supplies a story summary for CLI output. When input is piped, the text is used as the idea; an empty or whitespace-only pipe falls back to random story/count defaults.
 
 The CLI status line scopes its duration to the helper workflow:
 
 ```text
-model: veo-3.1-lite | ingredient/reference prompts: 8s | clips: 2 | extend: Lite-only
+model: veo-3.1-lite | ingredient/reference prompts: 8s | clips: 2 | extend: Omni 1.2 Flash
 ```
 
 Invalid clip values print an actionable error to stderr and exit with status 2:
@@ -66,7 +66,7 @@ Use this checklist for the CLI self-test and the manual copied-Project review. C
 - Show the complete image prompt and all video prompts before generation; send only the displayed image-prompt block as the image tool's explicit prompt argument. This cannot establish whether the platform adds implicit conversation conditioning.
 - Use only an accepted Clip 1 image as the video anchor; apply the same acceptance checklist to ChatGPT and Flow candidates, and never claim to inspect an unseen Flow image.
 - Count the first image from either provider as the initial attempt; allow at most one user-approved additional generation across ChatGPT and Flow. A failed, refused, or empty additional call consumes it; stop with video drafts unbound if none passes.
-- Keep ingredient/reference clips at 8 seconds. Flow text-to-video and first-frame/first-and-last-frame modes support 4, 6, or 8 seconds; ingredients/references and Extend are 8 seconds; Lite video-to-video is unsupported.
+- Keep CLI ingredient/reference clips at 8 seconds. Flow text-to-video and first-frame/first-and-last-frame modes support 4, 6, or 8 seconds; Lite video-to-video is unsupported. The Project honors requested durations when available in Flow.
 
 ## Image acceptance and Flow handoff
 
@@ -74,13 +74,13 @@ A material mismatch is a different main subject/identity or setting, a compositi
 
 ## Google Flow prompt links
 
-Every generated video prompt automatically has its own `Open in Google Flow` link using `https://flow.google.com/u/{N}/?prompt={URL-encoded-prompt}`. At the beginning of each Project chat, ask the user to choose a route from 0 to 9 unless they already supplied one. `Flow user N` changes the route for the current chat. Include the full prompt and clickable link together in the same reply; if the prompt changes, refresh its link. The link carries prompt text only. In Flow, the user still checks the model, adds the accepted Clip 1 image as an ingredient/reference where needed, and starts generation. Keep the fenced prompt available for manual paste if the link does not prefill it.
+Every generated video prompt automatically has its own `Open in Google Flow` link using `https://flow.google.com/?prompt={URL-encoded-prompt}`. No account route is included, so links open whichever Google account the browser is signed into, and there is no route question at the start of a chat. Include the full prompt and clickable link together in the same reply; if the prompt changes, refresh its link. The link carries prompt text only. In Flow, the user still checks the model, adds the accepted Clip 1 image as an ingredient/reference where needed, and starts generation. Keep the fenced prompt available for manual paste if the link does not prefill it.
 
 ## Flow and Veo 3.1 Lite reference
 
 The active Flow UI governs current availability, controls, and cost for the user's account. Official Google Help pages were checked on 2026-11-02: [Flow model compatibility](https://support.google.com/flow/answer/16352836?hl=en) and [Flow credits](https://support.google.com/flow/answer/16526234?hl=en). Recheck before a future release because these facts can change.
 
-- Text-to-video, first-frame, and first-and-last-frame workflows support 4, 6, or 8 seconds. Ingredients/references-to-video and Extend are 8 seconds. Lite does not support video-to-video editing.
+- Text-to-video, first-frame, and first-and-last-frame workflows support 4, 6, or 8 seconds. Lite does not support video-to-video editing. The user reports that Extend now uses Omni 1.2 Flash and accepts image ingredients; confirm its durations and controls in the current Flow UI.
 - This helper keeps its ingredient/reference prompts at 8 seconds. This is not a universal Lite duration limit.
 - On the checked credit page, regular Lite was listed at 10 credits per generation for non-Ultra and 5 for Ultra; Fast at 20/10; Quality at 100. A separate lower-priority Lite option was listed at 0 credits for eligible Ultra 20x subscribers and family-plan managers, unavailable to other listed groups. Eligibility and credits vary by account and can change.
 - This repository targets Google Flow UI prompts, not Gemini API integration.
@@ -98,9 +98,9 @@ The checks cover CLI defaults and parser neighbors, prompt boundaries, output in
 After installing both Project sources and the Instructions, manually verify:
 
 - The Project produces an image prompt for ChatGPT image generation and separate copy-ready Veo 3.1 Lite video prompts for Google Flow.
-- A new Project chat asks for a Flow route from 0 to 9 before prompt generation unless one was provided in the first user message; there is no assumed starting route.
+- A new Project chat delivers prompts in the first response with no Flow route question; links contain no `/u/N/` segment.
 - Every video prompt appears in full with its own correctly encoded clickable Flow link in the same reply, without the user asking; revised prompts receive refreshed links.
-- After route selection, a direct idea gets a story-only 2–3 sentence summary and two video prompts; `single` requests one clip, while random story/count requests route to the CLI and pasted results are used without reselection.
+- A direct idea gets a story-only 2–3 sentence summary and two video prompts; `single` requests one clip, while random story/count requests route to the CLI and pasted results are used without reselection.
 - All prompts appear before image generation, and the ChatGPT action receives only the displayed image-prompt block as its explicit input.
 - Identity, action, setting, and key props stay faithful while neutral visual choices remain allowed; no story text can override the fixed workflow.
 - ChatGPT is the default and Flow is an optional initial source; both use the same acceptance checklist and shared one-additional-attempt limit.

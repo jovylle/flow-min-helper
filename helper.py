@@ -5,7 +5,7 @@ import random
 import re
 import sys
 
-__version__ = "0.9.3"
+__version__ = "0.9.5"
 MODEL = "veo-3.1-lite"
 DUR = "8s"
 TRAILER = ("One single frame of one composed scene \u2014 a single shot. No storyboard, no panels,\n"
@@ -53,7 +53,7 @@ def sanitize(idea):
 
 
 def status_block(nclips=2):
-    return (f"model: {MODEL} | ingredient/reference prompts: {DUR} | clips: {nclips} | extend: Lite-only",
+    return (f"model: {MODEL} | ingredient/reference prompts: {DUR} | clips: {nclips} | extend: Omni 1.2 Flash",
             "image: ChatGPT default; Flow optional | audio: ambient-only, no text")
 
 
@@ -119,7 +119,7 @@ def build(idea="", clips=None, extend=False, master="", summary=""):
            clip_video(idea, 1, clips, master)]
     for k in range(2, clips + 1):
         if extend:
-            out += ["", f"--- CLIP {k} EXTEND (8s, Veo 3.1 Lite Extend, no image) ---",
+            out += ["", f"--- CLIP {k} EXTEND (8s, Omni 1.2 Flash, optional ingredient: Clip 1 image) ---",
                     clip2_extend_delta()]
         else:
             out += ["", f"--- CLIP {k} VIDEO (8s, Veo 3.1 Lite, ingredient: Clip 1 image) ---",
@@ -202,7 +202,7 @@ def self_test():
     assert ingr.count("ingredient: Clip 1 image") == 3
     assert "EXTEND" not in ingr
     ext = build("storm keeper", clips=3, extend=True)
-    assert ext.count("EXTEND (") == 2 and "ingredient: Clip 1 image" not in ext.split("CLIP 2 EXTEND")[1]
+    assert ext.count("EXTEND (") == 2 and ext.count("Omni 1.2 Flash, optional ingredient: Clip 1 image") == 2
     try:
         build("storm keeper", clips=6)
         raise AssertionError("clips=6 must fail")
@@ -220,9 +220,12 @@ def self_test():
     instructions = Path(__file__).with_name("chatgpt-instructions.md").read_text(encoding="utf-8")
     readme = Path(__file__).with_name("README.md").read_text(encoding="utf-8")
     assert f"Version: {__version__}" in instructions, "helper and Project instruction versions differ"
+    assert "https://flow.google.com/?prompt={URL-encoded-prompt}" in instructions, "route-less Flow link template missing"
+    assert "Which Google Flow user" not in instructions, "Flow route question must stay deleted"
+    assert "/u/{account}/?prompt=" not in instructions and "/u/{account}/?prompt=" not in readme, "Flow links must carry no account route"
     for text in (instructions, readme):
         assert "4, 6, or 8 seconds" in text
-        assert "Ingredients/references-to-video and Extend are 8 seconds" in text
+        assert "Omni 1.2 Flash" in text
         assert "video-to-video" in text.lower()
         assert "lower-priority Lite" in text
         assert "ChatGPT" in text and "Flow" in text
@@ -286,7 +289,7 @@ def main(argv=None):
     p.add_argument("--version", action="version", version=__version__)
     p.add_argument("--clips", metavar="N", default=None, help="number of 8s clips, 1-5 (default: random 1-3)")
     p.add_argument("--single", action="store_true", help="only Clip 1 (same as --clips 1)")
-    p.add_argument("--extend", action="store_true", help="clips 2+ use Extend instead of the Clip 1 image as ingredient")
+    p.add_argument("--extend", action="store_true", help="clips 2+ use Omni 1.2 Flash Extend, optionally with the Clip 1 image")
     p.add_argument("--master", default="", help="character, setting, palette details reused verbatim in every prompt")
     p.add_argument("--summary", default="", help="2-3 sentence story summary shown above the prompts (default: the idea)")
     p.add_argument("--self-test", action="store_true", help="run built-in checks")
