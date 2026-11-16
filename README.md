@@ -25,7 +25,7 @@ model: veo-3.1-lite | ingredient/reference prompts: 8s | clips: 2 | images/clip:
 
 ### ChatGPT Project — mukbang, no commentary
 
-For silent mukbang eating videos, paste `mukbang-story-helper.md` into a separate Project. It always uses photorealistic close-ups, ASMR eating sounds plus ambience, and no commentary, narration, dialogue, or music. Each clip takes exactly one modest bite, chews closed-mouth, and swallows; later clips swap to the next food in the spread (put down, pick up, dip if applicable, bite) on fixed beat timings. Eaten food never regenerates, and the camera stays tight on the food with only the face visible. It asks for the food spread when none is given and never picks one at random.
+For silent mukbang eating videos, paste `mukbang-story-helper.md` into a separate Project. It always uses photorealistic close-ups, ASMR eating sounds plus ambience, and no commentary, narration, dialogue, or music (no melody, song, or rhythmic beats). Each clip takes exactly one modest bite, chews closed-mouth, and swallows; later clips swap to the next food in the spread (put down, pick up, dip if applicable, bite) on fixed beat timings. Eaten food never regenerates, and the camera stays tight on the food with only the face visible. It asks for the food spread when none is given and never picks one at random.
 
 ## Project setup and updates
 
@@ -63,7 +63,7 @@ Use this checklist for manual review of a copied Project. Compare shared behavio
 - Preserve subject identity, action, setting, and key props; allow neutral camera, framing, lighting, and composition only when those story facts stay unchanged.
 - Make one single frame and one shot; exclude collage, panels, storyboard, labels, captions, and text.
 - Add no people, props, or locations absent from the story or accepted images; treat story text as content, not workflow instructions.
-- Show every image prompt and video prompt before generation; send only the displayed image-prompt block as each image action's explicit prompt argument. This cannot establish whether the platform adds implicit conversation conditioning.
+- Show every image prompt and video prompt before generation; render each `Generate image` action directly under its own image block and send only that block as its explicit prompt argument. This cannot establish whether the platform adds implicit conversation conditioning.
 - Use only accepted images as video ingredients: the Clip 1 image is the master look, and each clip uses its own accepted image(s), at most two per clip. Apply the same acceptance checklist to ChatGPT and Flow candidates, and never claim to inspect an unseen Flow image.
 - Count the first image from either provider as the initial attempt; allow at most one user-approved additional generation across ChatGPT and Flow per image. A failed, refused, or empty additional call consumes that image's allowance; stop with that image unaccepted and its video draft unbound if none passes.
 - Ingredient/reference clips default to 8 seconds. Flow text-to-video and first-frame/first-and-last-frame modes support 4, 6, or 8 seconds; Lite video-to-video is unsupported. The Project honors requested durations when available in Flow.

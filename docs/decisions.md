@@ -2,6 +2,18 @@
 
 Short ADR-style log. Newest first.
 
+## 2026-11-17 — No music of any kind in any Project (0.10.2)
+
+- Context: the Projects banned "music" in several places, but not melody, song, or rhythmic beats, and the wording varied between files and categories. The owner wants only ambience and sounds the visible things make.
+- Decision: audio is ambient-only in both files. Banned: music of any kind, melody, song, singing, humming, score, drum or beat, and any beat or rhythmic pattern built from sounds (no drum-like tapping, no repeating loop). Speech stays opt-in when supplied. Categories may not add music. Mukbang keeps its one-bite sound design, with the bite and chew sounds limited to what the eater does.
+- Consequence: rules are restated in each Project's status line, audio rule, negatives, and Extend delta, so they do not depend on another file. Not verified in Flow yet.
+
+## 2026-11-17 — Generate image actions inline per image block (0.10.1)
+
+- Context: the `Generate image` action was specified once, after the whole prompt bundle, so the action was easy to miss or not rendered at all. The user expected one button per clip.
+- Decision: each image block in `general-story-helper.md` gets its own `Generate image` action directly beneath it, in the same reply, in clip order. Two-image clips get one under START and one under END. Extend clips without an image block get none.
+- Consequence: the action's rendering is up to ChatGPT; the file can only request it. If it still does not render, the fallback is a note under the block and the fenced prompt. `mukbang-story-helper.md` keeps its single after-bundle action until it is updated the same way. Both versions moved to 0.10.1 to keep AGENTS.md's version sync.
+
 ## 2026-11-16 — Rename instruction files
 
 - Decision: `chatgpt-instructions.md` is now `general-story-helper.md` and `mukbang-instructions.md` is now `mukbang-story-helper.md`, so each name says which Project it belongs to. Older entries below keep the old names as history.

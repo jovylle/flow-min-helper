@@ -1,6 +1,6 @@
 # Project Context — flow-min-helper
 
-Last updated: 2026-11-16. Current version: 0.10.0.
+Last updated: 2026-11-17. Current version: 0.10.2.
 
 ## What this repository does
 
