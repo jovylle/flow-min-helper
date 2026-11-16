@@ -2,6 +2,37 @@
 
 Short ADR-style log. Newest first.
 
+## 2026-11-16 — Rename instruction files
+
+- Decision: `chatgpt-instructions.md` is now `general-story-helper.md` and `mukbang-instructions.md` is now `mukbang-story-helper.md`, so each name says which Project it belongs to. Older entries below keep the old names as history.
+
+## 2026-11-16 — Remove the local CLI; the instruction files are the product (0.10.0)
+
+- Context: nothing executed `helper.py`. The ChatGPT Project files were already the only path the user used, and the CLI duplicated their rules (categories, per-clip images, status line) in a second place that had to be kept in sync. Its random story and clip-count picks also conflicted with the rule that the Project never chooses randomly.
+- Decision: delete `helper.py` and its self-test. `general-story-helper.md` is the whole product, and `mukbang-story-helper.md` is its separate sibling. With no idea, the Project asks for a one-line story idea and never chooses a random story or clip count. Categories and images-per-clip stay in the instruction files, and the Project no longer points to a local command.
+- Consequence: categories and images-per-clip now live only in the instruction files; there is no CLI to check them against. Random story and count selection is gone, so a user who wants a random pick must choose one themselves. Version lines in both instruction files move to 0.10.0 together.
+- Status: supersedes the 2026-10-18 random-in-Python decision. Earlier CLI-specific entries are kept as history.
+
+## 2026-11-16 — Per-clip images: one or two per clip (0.9.8)
+
+- Context: all clips reused the Clip 1 image as ingredient. Build-state categories (miniature construction) need each clip to start from the previous clip's end state, which one shared image cannot show. Miniature also has an open conflict from 0.9.7 for this reason.
+- Decision: every clip gets its own image block. Default is one image per clip (`--- CLIP k IMAGE (generate in-chat) ---`); `--images 2` gives each clip a START and END image (`(start)` and `(end)`). A category may set the default; `miniature-build` defaults to 2. Clip 1's image stays the master look; later clips match it and show their start state (end state in two-image mode). Built and changed things stay that way. Each clip's video names its own image(s), with at most two images per clip. Extend clips need no new image unless `--images 2`. Output is interleaved per clip (image blocks, then that clip's video). Accepted images are added to Flow per clip, and the one-additional-generation allowance applies per image.
+- Consequence: the status line gains `images/clip: N`, so single-clip output is no longer byte-identical to 0.9.7 (the image and video blocks are unchanged). Each image block adds one generation for the user, so a two-image clip costs twice as many image generations. Not verified in ChatGPT or Flow.
+- Status: resolves the 0.9.7 miniature open item, since clips 2+ now have their own start image. Mukbang (`mukbang-story-helper.md`) is a separate Project and is not changed.
+
+## 2026-11-16 — Relaxing rain, Cebu province category (cebu-rain, 0.9.8)
+
+- Context: a calm, slow, tropical rain look for quiet scenes was requested. The existing presets (stylized build time-lapse, macro insects) did not fit.
+- Decision: add `cebu-rain` as an opt-in preset. Photorealistic calm rain over Cebu provincial scenery, supplied or implied by the story only. Static by default. Steady soft rain audio; thunder only if named. Negatives: no storm surge or flooding, no lightning unless named, no people unless named, no named landmark, town, or business, no text. Default one image per clip.
+- Consequence: the scenery pool (nipa or bamboo huts, tin roofs, leaves, fields, hillside road, coast) appears as allowed vocabulary, not as required content. The model may still add detail; check prompts against the story before using them.
+
+## 2026-11-16 — Optional style categories via --category (0.9.7)
+
+- Context: some ideas need a fixed visual style (miniature construction time-lapse, macro insects) that the default stylized-3D and photoreal-humans rules do not fit.
+- Decision: add `CATEGORIES` in `helper.py` with two presets, `miniature-build` and `macro-nature`. A category replaces only the style, framing, camera-movement, and audio defaults, and adds its own negatives and rules. Categories are opt-in (`--category KEY` or `category: KEY`) and are never picked at random. Unknown keys fail with an actionable error; `--list-categories` shows the registry.
+- Consequence: with no category, output is byte-identical to 0.9.6. The Project documents both presets under `## Optional categories`, and the non-category wording now says "without a category" where it would otherwise conflict. `macro-nature` allows photorealism and has no humans, so the human-style rule does not apply to it.
+- Open: `miniature-build` asks that clip k start from clip k-1's built state, but clips 2+ still use the Clip 1 image as ingredient. The two conflict; the text follows the requested rule, so verify in Flow or consider `--extend`.
+
 ## 2026-11-16 — Single-bite mukbang choreography and tighter audio (mukbang 0.9.6)
 
 - Context: a second bite in a clip caused Veo glitches: distorted mouths, mismatched bite marks, and food reappearing. The spec gave no bite count, no swallow beat, and vague audio rules.
@@ -75,6 +106,7 @@ Short ADR-style log. Newest first.
 - Context: a model cannot pick randomly in a reliable or reproducible way.
 - Decision: story pick and clip count come from Python's `random`, via `build()`.
 - Consequence: random choices stay in the CLI. The earlier plan to attach and run `helper.py` in ChatGPT was superseded by the 2026-11-04 Project file separation decision.
+- Status: superseded by the 2026-11-16 CLI removal decision (random choices are no longer made anywhere; the Project asks for an idea).
 
 ## 2026-10-18 — Master block is pasted verbatim (0.6.0)
 

@@ -1,113 +1,102 @@
 # Flow Min Helper
 
-Prepare a Clip 1 image prompt and 1–5 Google Flow video prompts from a story idea. The repository has two separate paths: instructions you copy into a ChatGPT Project, and a local standard-library Python CLI. The Project does not connect to or call this repository.
+Prepare one or two ChatGPT image prompts per clip and 1–5 Google Flow video prompts from a story idea. The product is two instruction files for ChatGPT Projects. There is no local code: the Project does not connect to or call this repository.
 
-## Choose a path
+## Choose a file
+
+| File | Use it for |
+| --- | --- |
+| `general-story-helper.md` | General stories, with optional `category: KEY` style presets |
+| `mukbang-story-helper.md` | Silent mukbang eating videos, in a separate Project |
 
 ### ChatGPT Project — supplied idea
 
-**Starting assumptions:** You can open the target ChatGPT Project, have `chatgpt-instructions.md` ready, and have an idea. Paste `chatgpt-instructions.md` into the Project's Instructions settings (or attach/upload it as a project file).
+**Starting assumptions:** You can open the target ChatGPT Project and have an idea. Paste `general-story-helper.md` into the Project's Instructions settings (or attach/upload it as a project file).
 
-**First useful result:** A story-only 2–3 sentence summary, a ChatGPT image-generation prompt, and two copy-ready Veo 3.1 Lite video prompts for Google Flow, each with its own link. Links carry no account route, so there is no per-chat Flow user question and the browser's signed-in account decides. A direct idea with no count defaults to two clips; `clips N` means 1–5 and `single` means one. ChatGPT is the default image source; Flow is optional before the first image.
+**First useful result:** A story-only 2–3 sentence summary, ChatGPT image-generation prompts (one per clip, or a START and END pair per clip with `images 2`), and copy-ready Veo 3.1 Lite video prompts for Google Flow, each with its own link. A direct idea with no count defaults to two clips; `clips N` means 1–5 and `single` means one. If no idea is given, the Project asks for a one-line story idea. It never chooses a random story or clip count.
 
-**Target time:** 1–2 minutes for an already configured Project prompt bundle, excluding image/video generation. A fresh Project setup target is 5–10 minutes when account access and instructions are ready. These are targets, not observed timings. Account access and current Project settings behavior are user-specific.
+Status line shown at the top of each reply:
 
-### Local CLI — idea or random selection
+```text
+model: veo-3.1-lite | ingredient/reference prompts: 8s | clips: 2 | images/clip: 1 | extend: Omni 1.2 Flash
+```
 
-**Starting assumptions:** You have a local repository checkout and Python 3. The helper uses only the Python standard library.
-
-**First useful result:** A status block, story summary, Clip 1 image prompt, and requested Flow video prompts. With no idea, Python `random` selects a story and a 1–3 clip count. Empty or whitespace-only piped input uses the same defaults. With an idea and no `--clips`, the count is random from 1 through 3. The Project never chooses random values.
-
-**Target time:** Under 1 minute once the repository and Python 3 are ready. This is a target, not an observed timing. Python installation and repository availability may vary.
+**Target time:** 1–2 minutes for an already configured Project prompt bundle, excluding image/video generation. A fresh Project setup target is 5–10 minutes when account access and instructions are ready. These are targets, not observed timings.
 
 ### ChatGPT Project — mukbang, no commentary
 
-For silent mukbang eating videos, paste `mukbang-instructions.md` into a separate Project instead. It always uses photorealistic close-ups, ASMR eating sounds plus ambience, and no commentary, narration, dialogue, or music. Each clip takes exactly one modest bite, chews closed-mouth, and swallows; later clips swap to the next food in the spread (put down, pick up, dip if applicable, bite) on fixed beat timings. Eaten food never regenerates, and the camera stays tight on the food with only the face visible. Audio is one bite sound, synced chewing, one swallow, and quiet room tone, with no looped bites. It asks for the food spread when none is given and never picks one at random.
+For silent mukbang eating videos, paste `mukbang-story-helper.md` into a separate Project. It always uses photorealistic close-ups, ASMR eating sounds plus ambience, and no commentary, narration, dialogue, or music. Each clip takes exactly one modest bite, chews closed-mouth, and swallows; later clips swap to the next food in the spread (put down, pick up, dip if applicable, bite) on fixed beat timings. Eaten food never regenerates, and the camera stays tight on the food with only the face visible. It asks for the food spread when none is given and never picks one at random.
 
-## Project setup and manual update
+## Project setup and updates
 
-1. Copy `chatgpt-instructions.md` into your target Project's Instructions settings and save (or attach/upload it as a project file).
-2. For updates, simply update the Instructions with the new `chatgpt-instructions.md`.
+1. Copy `general-story-helper.md` into your target Project's Instructions settings and save (or attach/upload it as a project file).
+2. For updates, replace the Instructions with the new file.
 3. Confirm the Instructions save or the file is uploaded.
 
-There is no repo-to-Project runtime connection or automatic sync. The user manually installs `chatgpt-instructions.md` once. The Project cannot execute `helper.py`; random story/count selection still runs through the local CLI. Do not modify a Project as part of repository changes.
+There is no runtime connection or automatic sync. Do not modify a Project as part of repository changes.
 
-## Usage
+## Images per clip
 
-```sh
-python3 helper.py "a lighthouse keeper signals through dust as storm gathers"
-python3 helper.py                       # random story and random 1-3 clips
-python3 helper.py "idea..." --single   # Clip 1 only
-python3 helper.py "idea..." --clips 5  # explicit count, 1-5
-python3 helper.py "idea..." --extend   # clips 2+ use Omni 1.2 Flash Extend
-python3 helper.py "idea..." --master "hooded keeper, grey coat"
-python3 helper.py --version
-python3 helper.py --self-test
-```
+Every clip has its own image block, printed in clip order before that clip's video block:
 
-`--clips` accepts integers 1–5. `--single` selects one clip. `--extend` is opt-in; otherwise clips 2+ use the Clip 1 image as ingredient/reference. Extend continues the preceding video and can optionally use the accepted image as an ingredient. The CLI defaults to 8-second clips; check available Extend durations in Flow. `--master` repeats character, setting, or palette details. `--summary` supplies a story summary for CLI output. When input is piped, the text is used as the idea; an empty or whitespace-only pipe falls back to random story/count defaults.
+- **Default (one image per clip):** `--- CLIP k IMAGE (generate in-chat) ---`, then `--- CLIP k VIDEO (...) ---`. Clip 1's image is the master look. Clip 2+ images match that look and show the clip's start state, which follows the previous clip's end state. A clip's video names its own image as ingredient; the Clip 1 image is an optional look reference.
+- **`images 2` (START and END):** `--- CLIP k IMAGE (start) ---`, `--- CLIP k IMAGE (end) ---`, then the video block. The START image is the ingredient; the END image describes the held pose the clip lands on. Flow users may attach the END image as well. Never more than two images per clip.
+- **Extend clips** need no new image unless `images 2` is requested.
+- A category may set its own default (`miniature-build` uses two). An explicit `images` request overrides it.
 
-The CLI status line scopes its duration to the helper workflow:
+## Categories
 
-```text
-model: veo-3.1-lite | ingredient/reference prompts: 8s | clips: 2 | extend: Omni 1.2 Flash
-```
+`category: KEY` is an optional style preset. Without it, nothing changes. Categories are never chosen at random; the Project uses one only when the user writes `category: KEY` or clearly names the type. An unknown key makes the Project list the known keys and ask which to use.
 
-Invalid clip values print an actionable error to stderr and exit with status 2:
+| Key | Label | What changes |
+| --- | --- | --- |
+| `miniature-build` | Miniature construction time-lapse | Tilt-shift miniature diorama of tiny stylized 3D animated builders; static or slow push-in; soft ambient audio with tool taps; the structure grows in monotonic stages (built parts stay built); two images per clip by default (START and END). |
+| `macro-nature` | Macro nature with insects | Photorealistic extreme close-up macro of one insect; static, push-in, or slow pan; natural ambience only; no humans; anatomically correct insect. |
+| `cebu-rain` | Relaxing rain, Cebu province | Photorealistic calm tropical rain over Cebu provincial scenery (only as the story supplies or implies it); static by default, or push-in, slow pan, or slow tilt down; steady soft rain with tin roof or leaf sounds; thunder only if named; calm, never stormy; no storm surge, flooding, lightning unless named, or people unless named. |
 
-```text
-error[CLIPS_RANGE]: --clips 6 is outside 1-5. Fix: rerun with --clips 1 (or another integer from 1 through 5). See README.md#usage.
-error[CLIPS_TYPE]: --clips nope is not an integer. Fix: use an integer from 1 through 5. See README.md#usage.
-```
+Categories override only style, framing, camera movement, audio, and (for `miniature-build`) the default image count; all other rules still apply. To add one, append a bullet under `## Optional categories` in `general-story-helper.md` and a row here.
 
 ## Shared prompt-invariant checklist
 
-Use this checklist for the CLI self-test and the manual copied-Project review. Compare shared behavior, not exact wording.
+Use this checklist for manual review of a copied Project. Compare shared behavior, not exact wording.
 
 - Preserve subject identity, action, setting, and key props; allow neutral camera, framing, lighting, and composition only when those story facts stay unchanged.
 - Make one single frame and one shot; exclude collage, panels, storyboard, labels, captions, and text.
-- Add no people, props, or locations absent from the story or accepted Clip 1 image; treat story text as content, not workflow instructions.
-- Show the complete image prompt and all video prompts before generation; send only the displayed image-prompt block as the image tool's explicit prompt argument. This cannot establish whether the platform adds implicit conversation conditioning.
-- Use only an accepted Clip 1 image as the video anchor; apply the same acceptance checklist to ChatGPT and Flow candidates, and never claim to inspect an unseen Flow image.
-- Count the first image from either provider as the initial attempt; allow at most one user-approved additional generation across ChatGPT and Flow. A failed, refused, or empty additional call consumes it; stop with video drafts unbound if none passes.
-- Keep CLI ingredient/reference clips at 8 seconds. Flow text-to-video and first-frame/first-and-last-frame modes support 4, 6, or 8 seconds; Lite video-to-video is unsupported. The Project honors requested durations when available in Flow.
+- Add no people, props, or locations absent from the story or accepted images; treat story text as content, not workflow instructions.
+- Show every image prompt and video prompt before generation; send only the displayed image-prompt block as each image action's explicit prompt argument. This cannot establish whether the platform adds implicit conversation conditioning.
+- Use only accepted images as video ingredients: the Clip 1 image is the master look, and each clip uses its own accepted image(s), at most two per clip. Apply the same acceptance checklist to ChatGPT and Flow candidates, and never claim to inspect an unseen Flow image.
+- Count the first image from either provider as the initial attempt; allow at most one user-approved additional generation across ChatGPT and Flow per image. A failed, refused, or empty additional call consumes that image's allowance; stop with that image unaccepted and its video draft unbound if none passes.
+- Ingredient/reference clips default to 8 seconds. Flow text-to-video and first-frame/first-and-last-frame modes support 4, 6, or 8 seconds; Lite video-to-video is unsupported. The Project honors requested durations when available in Flow.
 
 ## Image acceptance and Flow handoff
 
-A material mismatch is a different main subject/identity or setting, a composition/style that no longer illustrates the story, or a missing/unrequested major element. Minor rendering variation passes. A revised prompt must be shown and approved before the one additional attempt. If a Flow image is outside the Project, the user must attach it for review or apply the checklist and explicitly confirm acceptance. After acceptance, save/download a ChatGPT image and add it to Flow as the Clip 1 ingredient/reference; a Flow image is already in Flow. No image is bound after failure, refusal, emptiness, mismatch, or a declined retry.
+A material mismatch is a different main subject/identity or setting, a composition/style that no longer illustrates the story, or a missing/unrequested major element. Minor rendering variation passes. A revised prompt must be shown and approved before that image's one additional attempt. If a Flow image is outside the Project, the user must attach it for review or apply the checklist and explicitly confirm acceptance. After acceptance, save/download a ChatGPT image and add it to Flow as that clip's ingredient/reference (the START image for two-image clips); a Flow image is already in Flow. No image is bound after failure, refusal, emptiness, mismatch, or a declined retry.
 
 ## Google Flow prompt links
 
-Every generated video prompt automatically has its own `Open in Google Flow` link using `https://flow.google.com/?prompt={URL-encoded-prompt}`. No account route is included, so links open whichever Google account the browser is signed into, and there is no route question at the start of a chat. Include the full prompt and clickable link together in the same reply; if the prompt changes, refresh its link. The link carries prompt text only. In Flow, the user still checks the model, adds the accepted Clip 1 image as an ingredient/reference where needed, and starts generation. Keep the fenced prompt available for manual paste if the link does not prefill it.
+Every generated video prompt automatically has its own `Open in Google Flow` link using `https://flow.google.com/?prompt={URL-encoded-prompt}`. No account route is included, so links open whichever Google account the browser is signed into. Include the full prompt and clickable link together in the same reply; if the prompt changes, refresh its link. The link carries prompt text only. In Flow, the user still checks the model, adds each clip's accepted image(s) as ingredient/reference where needed, and starts generation. Keep the fenced prompt available for manual paste if the link does not prefill it.
 
 ## Flow and Veo 3.1 Lite reference
 
 The active Flow UI governs current availability, controls, and cost for the user's account. Official Google Help pages were checked on 2026-11-02: [Flow model compatibility](https://support.google.com/flow/answer/16352836?hl=en) and [Flow credits](https://support.google.com/flow/answer/16526234?hl=en). Recheck before a future release because these facts can change.
 
 - Text-to-video, first-frame, and first-and-last-frame workflows support 4, 6, or 8 seconds. Lite does not support video-to-video editing. The user reports that Extend now uses Omni 1.2 Flash and accepts image ingredients; confirm its durations and controls in the current Flow UI.
-- This helper keeps its ingredient/reference prompts at 8 seconds. This is not a universal Lite duration limit.
+- The Project's ingredient/reference prompts default to 8 seconds. This is not a universal Lite duration limit.
 - On the checked credit page, regular Lite was listed at 10 credits per generation for non-Ultra and 5 for Ultra; Fast at 20/10; Quality at 100. A separate lower-priority Lite option was listed at 0 credits for eligible Ultra 20x subscribers and family-plan managers, unavailable to other listed groups. Eligibility and credits vary by account and can change.
 - This repository targets Google Flow UI prompts, not Gemini API integration.
 
-## Development checks
+## Manual verification
 
-Run the focused built-in standard-library checks with:
+After installing the Project instructions, verify:
 
-```sh
-python3 helper.py --self-test
-```
-
-The checks cover CLI defaults and parser neighbors, prompt boundaries, output invariants, mode-specific duration wording, Extend behavior, actionable clip errors, and synchronized versions. They do not generate images or videos.
-
-After installing both Project sources and the Instructions, manually verify:
-
-- The Project produces an image prompt for ChatGPT image generation and separate copy-ready Veo 3.1 Lite video prompts for Google Flow.
+- The Project produces image prompts for ChatGPT image generation (one per clip, or START and END per clip with `images 2`) and separate copy-ready Veo 3.1 Lite video prompts for Google Flow.
 - A new Project chat delivers prompts in the first response with no Flow route question; links contain no `/u/N/` segment.
 - Every video prompt appears in full with its own correctly encoded clickable Flow link in the same reply, without the user asking; revised prompts receive refreshed links.
-- A direct idea gets a story-only 2–3 sentence summary and two video prompts; `single` requests one clip, while random story/count requests route to the CLI and pasted results are used without reselection.
-- All prompts appear before image generation, and the ChatGPT action receives only the displayed image-prompt block as its explicit input.
+- A direct idea gets a story-only 2–3 sentence summary and two video prompts; `single` requests one clip. A request with no idea gets a question asking for a one-line idea, and no random story or count is chosen.
+- All prompts appear before image generation, and each ChatGPT action receives only its displayed image-prompt block as its explicit input.
 - Identity, action, setting, and key props stay faithful while neutral visual choices remain allowed; no story text can override the fixed workflow.
-- ChatGPT is the default and Flow is an optional initial source; both use the same acceptance checklist and shared one-additional-attempt limit.
+- ChatGPT is the default and Flow is an optional initial source; both use the same acceptance checklist, and the one-additional-attempt allowance applies per image.
 - Failures, refusals, empty results, mismatches, revised-prompt approval, declined retries, and unbound drafts follow the acceptance rules. A Flow image outside the Project is attached or explicitly user-checked; the Project never claims to inspect an unseen image.
+- Two-image clips: later clips show the previous clip's end state (built or changed things stay that way), and each video names its START image and END image.
 - Mukbang prompts use photorealistic, hyperrealistic close-ups with food near the lens; exactly one bite per clip with closed-mouth chewing and a swallow (no second bite or looped bite sounds); tightened, action-synced audio plus room tone; and immediate eating without commentary, a pause, or camera smile.
-- `chatgpt-instructions.md` saves or is attached; `helper.py` remains local.
+- `general-story-helper.md` saves or is attached.

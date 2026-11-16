@@ -1,7 +1,6 @@
 # flow-min-helper — agent notes
 
-- Random choices (story pick, clip count) use Python's `random` module in `helper.py`. Never ask an LLM to pick randomly.
-- No-idea default: random story from `STORIES`, clip count `random.randint(1, 3)`. `--clips` overrides (1-5).
-- Version lives in `helper.py` (`__version__`) and the `Version:` line in `chatgpt-instructions.md`. Keep them in sync.
-- The ChatGPT Project instructions file is the product path. The random step is CLI-only.
+- Version lives in the `Version:` line of `general-story-helper.md` and `mukbang-story-helper.md`. Keep them in sync.
+- The instruction files are the product. There is no CLI and no local code to run.
+- Random choices are not made by the Project. If the user gives no idea, ask for one.
 - Do not commit `VEO-FLOW-NOTES.md` without the user's OK.
