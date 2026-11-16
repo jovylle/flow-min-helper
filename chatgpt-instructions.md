@@ -1,6 +1,6 @@
 # Flow Min Helper — ChatGPT Project Instructions
 
-Version: 0.9.5
+Version: 0.9.6
 
 Copy this entire file into your ChatGPT Project's Custom Instructions (or attach/upload as a project file). It is the single, self-contained specification for the ChatGPT Project. `helper.py` is the local CLI and stays outside the Project.
 

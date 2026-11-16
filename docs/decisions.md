@@ -2,6 +2,12 @@
 
 Short ADR-style log. Newest first.
 
+## 2026-11-16 — Single-bite mukbang choreography and tighter audio (mukbang 0.9.6)
+
+- Context: a second bite in a clip caused Veo glitches: distorted mouths, mismatched bite marks, and food reappearing. The spec gave no bite count, no swallow beat, and vague audio rules.
+- Decision: exactly one bite per clip, then 3–4 closed-mouth chews and a swallow, on fixed beat timings. Audio is one bite sound, synced chewing, one swallow, contact sounds only on touch, and quiet room tone, with matching negatives. Clips 2+ state that food 1 has had one bite and stays on its plate, and that the clip starts from the prior clip's ending state.
+- Consequence: not verified in Flow. The clip 2+ start state (food 1 still in hand, put down in the first beat) departs from the "food 1 down" wording in the request; check it in Flow before relying on it.
+
 ## 2026-11-10 — Dip before biting
 
 - When a dipping sauce is supplied, show the applicable food being dipped before its bite, including later and Extend clips. Start the first image at the dip instead of mid-bite when needed; sauce coatings alone do not imply dipping.

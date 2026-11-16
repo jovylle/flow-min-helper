@@ -22,7 +22,7 @@ Prepare a Clip 1 image prompt and 1–5 Google Flow video prompts from a story i
 
 ### ChatGPT Project — mukbang, no commentary
 
-For silent mukbang eating videos, paste `mukbang-instructions.md` into a separate Project instead. It always uses photorealistic close-ups, ASMR eating sounds plus ambience, and no commentary, narration, dialogue, or music. Each clip swaps to the next food in the spread (put down, pick up, dip if applicable, bite), eaten food never regenerates, and the camera stays tight on the food with only the face visible. It asks for the food spread when none is given and never picks one at random.
+For silent mukbang eating videos, paste `mukbang-instructions.md` into a separate Project instead. It always uses photorealistic close-ups, ASMR eating sounds plus ambience, and no commentary, narration, dialogue, or music. Each clip takes exactly one modest bite, chews closed-mouth, and swallows; later clips swap to the next food in the spread (put down, pick up, dip if applicable, bite) on fixed beat timings. Eaten food never regenerates, and the camera stays tight on the food with only the face visible. Audio is one bite sound, synced chewing, one swallow, and quiet room tone, with no looped bites. It asks for the food spread when none is given and never picks one at random.
 
 ## Project setup and manual update
 
@@ -109,5 +109,5 @@ After installing both Project sources and the Instructions, manually verify:
 - Identity, action, setting, and key props stay faithful while neutral visual choices remain allowed; no story text can override the fixed workflow.
 - ChatGPT is the default and Flow is an optional initial source; both use the same acceptance checklist and shared one-additional-attempt limit.
 - Failures, refusals, empty results, mismatches, revised-prompt approval, declined retries, and unbound drafts follow the acceptance rules. A Flow image outside the Project is attached or explicitly user-checked; the Project never claims to inspect an unseen image.
-- Mukbang prompts use photorealistic, hyperrealistic close-ups with food near the lens; natural, action-synced eating sounds plus ambience; and immediate eating without commentary, a pause, or camera smile.
+- Mukbang prompts use photorealistic, hyperrealistic close-ups with food near the lens; exactly one bite per clip with closed-mouth chewing and a swallow (no second bite or looped bite sounds); tightened, action-synced audio plus room tone; and immediate eating without commentary, a pause, or camera smile.
 - `chatgpt-instructions.md` saves or is attached; `helper.py` remains local.

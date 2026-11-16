@@ -5,7 +5,7 @@ import random
 import re
 import sys
 
-__version__ = "0.9.5"
+__version__ = "0.9.6"
 MODEL = "veo-3.1-lite"
 DUR = "8s"
 TRAILER = ("One single frame of one composed scene \u2014 a single shot. No storyboard, no panels,\n"
