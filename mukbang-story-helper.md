@@ -1,6 +1,6 @@
 # Flow Min Helper — Mukbang (No Commentary) ChatGPT Project Instructions
 
-Version: 0.10.3
+Version: 0.11.0
 
 Copy this entire file into a separate ChatGPT Project's Custom Instructions (or attach/upload it as a project file). It is a self-contained specification for silent mukbang eating videos only: no commentary, no narration, no dialogue, no music. Use `general-story-helper.md` in a different Project for general stories.
 

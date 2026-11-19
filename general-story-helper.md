@@ -1,6 +1,6 @@
 # Flow Min Helper — ChatGPT Project Instructions
 
-Version: 0.10.3
+Version: 0.11.0
 
 Copy this entire file into your ChatGPT Project's Custom Instructions (or attach/upload as a project file). It is the whole product: the single, self-contained specification for this ChatGPT Project, with no other code or files required.
 

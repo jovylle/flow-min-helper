@@ -8,6 +8,7 @@ Prepare one or two ChatGPT image prompts per clip and 1–5 Google Flow video pr
 | --- | --- |
 | `general-story-helper.md` | General stories, with optional `category: KEY` style presets |
 | `mukbang-story-helper.md` | Silent mukbang eating videos, in a separate Project |
+| `horror-riddle-helper.md` | 3-clip horror riddle shorts (Tagalog by default, `english` to switch) that never show or hint at the answer, in a separate Project |
 
 ### ChatGPT Project — supplied idea
 
